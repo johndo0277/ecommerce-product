@@ -55,10 +55,12 @@ jobs:
           docker push $ECR_URI:latest
 
       # Step 6: Deploy to ECS
+
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: product-task-def.json
           service: product-service
           cluster: ecommerce-cluster
+          aws-region: ${{ secrets.AWS_REGION }} # Add this line
           wait-for-service-stability: true
