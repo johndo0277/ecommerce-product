@@ -1,0 +1,40 @@
+{
+  "family": "product-task",
+  "containerDefinitions": [
+    {
+      "name": "product-container",
+      "image": "637423197774.dkr.ecr.us-east-1.amazonaws.com/ecommerce/product:latest",
+      "memory": 128,
+      "cpu": 128,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 0
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_PROFILES_ACTIVE",
+          "value": "dev"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/product-service",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "networkMode": "bridge",
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "cpu": "128",
+  "memory": "128",
+  "executionRoleArn": "arn:aws:iam::637423197774:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::637423197774:role/ecsTaskRole"
+}
