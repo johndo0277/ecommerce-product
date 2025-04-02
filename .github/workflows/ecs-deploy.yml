@@ -17,6 +17,8 @@ jobs:
       # Step 2: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true # Suppress the "password not masked" warning
 
       # Step 3: Build and push Docker image to ECR
       - name: Build and push Docker image
