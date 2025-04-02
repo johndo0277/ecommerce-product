@@ -14,7 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Log in to Amazon ECR
+      # Step 2: Set up Java
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      # Step 3: Build with Maven
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      # Step 4: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
         env:
@@ -24,16 +35,15 @@ jobs:
         with:
           mask-password: true
 
-      # Debug Step: Print AWS_REGION
-      - name: Debug AWS_REGION
-        run: echo "AWS_REGION=${{ secrets.AWS_REGION }}"
-
-      # Step 3: Build and push Docker image to ECR
+      # Step 5: Build and push Docker image to ECR
       - name: Build and push Docker image
         run: |
           # Define variables
           IMAGE_NAME=ecommerce/product
           ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$IMAGE_NAME
+
+          # Debug ECR_URI
+          echo "ECR_URI=$ECR_URI"
 
           # Build the Docker image
           docker build -t $IMAGE_NAME .
@@ -44,7 +54,7 @@ jobs:
           # Push the image to ECR
           docker push $ECR_URI:latest
 
-      # Step 4: Deploy to ECS
+      # Step 6: Deploy to ECS
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
