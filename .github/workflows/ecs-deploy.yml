@@ -17,12 +17,12 @@ jobs:
       # Step 2: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
           mask-password: true
-
       # Debug Step: Print AWS_REGION
       - name: Debug AWS_REGION
         run: echo "AWS_REGION=${{ secrets.AWS_REGION }}"
@@ -33,9 +33,6 @@ jobs:
           # Define variables
           IMAGE_NAME=ecommerce/product
           ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$IMAGE_NAME
-
-          # Debug ECR_URI
-          echo "ECR_URI=$ECR_URI"
 
           # Build the Docker image
           docker build -t $IMAGE_NAME .
