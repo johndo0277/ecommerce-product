@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# RSA private key
+ecommerce-rsa.pem
+
+
