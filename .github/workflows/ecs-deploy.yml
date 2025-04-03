@@ -41,21 +41,24 @@ jobs:
           # Define variables
           IMAGE_NAME=ecommerce/product
           ECR_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/$IMAGE_NAME
+          IMAGE_TAG=${{ github.sha }}
 
           # Debug ECR_URI
-          echo "ECR_URI=$ECR_URI"
+          echo "ECR_URI=$ECR_URI:$IMAGE_TAG"
 
           # Build the Docker image
-          docker build -t $IMAGE_NAME .
+          docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
           # Tag the image for ECR
-          docker tag $IMAGE_NAME:latest $ECR_URI:latest
+          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
 
           # Push the image to ECR
-          docker push $ECR_URI:latest
+          docker push $ECR_URI:$IMAGE_TAG
+
+          # Update the task definition with the new image
+          sed -i "s|<IMAGE>|$ECR_URI:$IMAGE_TAG|g" product-task-def.json
 
       # Step 6: Deploy to ECS
-
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         env:

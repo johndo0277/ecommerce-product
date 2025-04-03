@@ -1,0 +1,41 @@
+# Exclude target directory (build artifacts)
+target/
+
+# Exclude Git-related files
+.git/
+.gitignore
+
+# Exclude IDE-specific files
+.idea/
+.vscode/
+*.iml
+
+# Exclude Maven wrapper files
+.mvn/
+mvnw
+mvnw.cmd
+
+# Exclude temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Exclude RSA private key
+ecommerce-rsa.pem
+
+# Exclude NetBeans-specific files
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Exclude STS-specific files
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
