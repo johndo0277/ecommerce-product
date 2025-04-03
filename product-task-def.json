@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "product-container",
-      "image": "637423197774.dkr.ecr.us-east-1.amazonaws.com/ecommerce/product:latest",
+      "image": "<IMAGE>",
       "memory": 512,
       "cpu": 256,
       "essential": true,
@@ -11,12 +11,6 @@
         {
           "containerPort": 8080,
           "hostPort": 0
-        }
-      ],
-      "environment": [
-        {
-          "name": "SPRING_PROFILES_ACTIVE",
-          "value": "dev"
         }
       ],
       "logConfiguration": {

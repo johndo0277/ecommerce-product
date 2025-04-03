@@ -51,14 +51,20 @@ jobs:
 
           # Tag the image for ECR
           docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_URI:$IMAGE_TAG
+          docker tag $IMAGE_NAME:$IMAGE_TAG $ECR_URI:latest
 
           # Push the image to ECR
           docker push $ECR_URI:$IMAGE_TAG
+          docker push $ECR_URI:latest
 
           # Update the task definition with the new image
           sed -i "s|<IMAGE>|$ECR_URI:$IMAGE_TAG|g" product-task-def.json
 
-      # Step 6: Deploy to ECS
+      # Step 6: Debug Task Definition
+      - name: Debug Task Definition
+        run: cat product-task-def.json
+
+      # Step 7: Deploy to ECS
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         env:
@@ -71,7 +77,7 @@ jobs:
           cluster: ecommerce-cluster
           wait-for-service-stability: true
 
-      # Step 7: Force ECS Service Update
+      # Step 8: Force ECS Service Update
       - name: Force ECS Service Update
         run: |
           aws ecs update-service \
