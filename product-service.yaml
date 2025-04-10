@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: Product Service API
+  version: 1.0.0
+paths:
+  /api/v1/products/{id}:
+    get:
+      summary: Get product by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Product details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponseDTO"
+components:
+  schemas:
+    ProductResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        unit_price:
+          type: number
+          format: double
+        quantity:
+          type: integer
+        category_id:
+          type: integer

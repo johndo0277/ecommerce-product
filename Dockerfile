@@ -6,12 +6,12 @@ WORKDIR /app
 
 # Copy only the pom.xml first to leverage Docker caching for dependencies
 COPY pom.xml .
+# Copy the rest of the project files
+COPY src ./src
 
 # Download dependencies (this step will be cached unless pom.xml changes)
 RUN mvn dependency:go-offline -B
 
-# Copy the rest of the project files
-COPY src ./src
 
 # Run Maven to build the application
 RUN mvn clean package -DskipTests
