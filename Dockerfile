@@ -1,11 +1,29 @@
-# Use an Alpine-based OpenJDK image
-FROM openjdk:17-alpine
+# Stage 1: Build the application using Maven
+FROM maven:3.8.8-eclipse-temurin-17 AS build
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the JAR file into the container
-COPY target/*.jar product.jar
+# Copy only the pom.xml first to leverage Docker caching for dependencies
+COPY pom.xml .
+
+# Download dependencies (this step will be cached unless pom.xml changes)
+RUN mvn dependency:go-offline -B
+
+# Copy the rest of the project files
+COPY src ./src
+
+# Run Maven to build the application
+RUN mvn clean package -DskipTests
+
+# Stage 2: Run the application
+FROM openjdk:17-alpine
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the built JAR file from the build stage
+COPY --from=build /app/target/*.jar product.jar
 
 # Expose the application port
 EXPOSE 8080
